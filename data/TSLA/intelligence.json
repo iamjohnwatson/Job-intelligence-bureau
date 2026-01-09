@@ -1,5 +1,5 @@
 {
-  "generated_at": 1767975448.8146505,
+  "generated_at": 1767979356.2277045,
   "scoop_leads": "LLM Error 410: {\"error\":\"https://api-inference.huggingface.co is no longer supported. Please use https://router.huggingface.co instead.\"}",
   "model": "meta-llama/Llama-3.1-70B-Instruct"
 }
