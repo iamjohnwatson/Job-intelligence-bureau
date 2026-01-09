@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forensic Newsroom Auditor</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.58.1/build/stlite.css">
+    <style>
+        body {
+            margin: 0;
+            background: #0a0a0f;
+        }
+
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #0a0a0f;
+            color: #fff;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        #loading h1 {
+            font-weight: 200;
+            letter-spacing: 2px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading">
+        <div class="spinner"></div>
+        <h1>FORENSIC NEWSROOM</h1>
+        <p>Initializing analysis environment...</p>
+    </div>
+    <div id="root"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.58.1/build/stlite.js"></script>
+    <script>
+        const files = ['app.py', 'sec_client.py', 'forensic_modules.py', 'llm_client.py'];
+
+        Promise.all(files.map(f => fetch(f).then(r => r.text())))
+            .then(([app, sec, forensic, llm]) => {
+                document.getElementById('loading').style.display = 'none';
+                stlite.mount({
+                    requirements: ["streamlit", "pandas", "requests", "beautifulsoup4", "lxml"],
+                    entrypoint: "app.py",
+                    files: {
+                        "app.py": app,
+                        "sec_client.py": sec,
+                        "forensic_modules.py": forensic,
+                        "llm_client.py": llm
+                    }
+                }, document.getElementById("root"));
+            })
+            .catch(err => {
+                document.getElementById('loading').innerHTML =
+                    '<h2>Error Loading</h2><pre>' + err + '</pre>';
+            });
+    </script>
+</body>
+
+</html>

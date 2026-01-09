@@ -1,0 +1,20 @@
+[
+  {
+    "form": "10-Q",
+    "accession": "0000320193-25-000073",
+    "accession_clean": "000032019325000073",
+    "primary_doc": "aapl-20250628.htm",
+    "date": "2025-08-01",
+    "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000073/aapl-20250628.htm",
+    "folder_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000073/"
+  },
+  {
+    "form": "10-Q",
+    "accession": "0000320193-25-000057",
+    "accession_clean": "000032019325000057",
+    "primary_doc": "aapl-20250329.htm",
+    "date": "2025-05-02",
+    "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000057/aapl-20250329.htm",
+    "folder_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000057/"
+  }
+]

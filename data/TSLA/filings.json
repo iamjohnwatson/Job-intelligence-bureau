@@ -1,0 +1,20 @@
+[
+  {
+    "form": "10-Q",
+    "accession": "0001628280-25-045968",
+    "accession_clean": "000162828025045968",
+    "primary_doc": "tsla-20250930.htm",
+    "date": "2025-10-23",
+    "url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828025045968/tsla-20250930.htm",
+    "folder_url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828025045968/"
+  },
+  {
+    "form": "10-Q",
+    "accession": "0001628280-25-035806",
+    "accession_clean": "000162828025035806",
+    "primary_doc": "tsla-20250630.htm",
+    "date": "2025-07-24",
+    "url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828025035806/tsla-20250630.htm",
+    "folder_url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828025035806/"
+  }
+]
