@@ -286,18 +286,33 @@ class SECClient:
         
         return f"{acc}.htm"
     
-    
     def _load_local_json(self, path: str) -> dict | list | None:
-        """Try to load data from local JSON file."""
+        """Try to load data from local JSON file or static server."""
         import os
         import json
+        import sys
+        
+        # 1. Try local filesystem (Native Python)
         try:
             if os.path.exists(path):
                 with open(path, 'r', encoding='utf-8') as f:
                     print(f"[SEC] Loading local data: {path}")
                     return json.load(f)
         except Exception as e:
-            print(f"[SEC] Local load error: {e}")
+            pass
+
+        # 2. Try fetching via HTTP (Stlite/Wasm)
+        # In stlite, local files aren't mounted, so we fetch relative URL
+        try:
+            # path is like "data/AAPL/filings.json"
+            # In deployed app, this is "./data/AAPL/filings.json"
+            print(f"[SEC] Fetching static data: {path}")
+            resp = requests.get(path) # Relative path works in browser
+            if resp.status_code == 200:
+                return resp.json()
+        except Exception as e:
+            print(f"[SEC] Static fetch error: {e}")
+            
         return None
 
     def get_filings(self, cik: str, form_type: str, count: int = 2, ticker: str = None) -> list[dict]:
