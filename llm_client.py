@@ -8,14 +8,14 @@ from urllib.parse import quote
 class InvestigativeEditor:
     """LLM-powered investigative analysis."""
     
-    MODEL = "meta-llama/Llama-3.1-70B-Instruct"
-    API_URL = f"https://api-inference.huggingface.co/models/{MODEL}"
+    MODEL = "meta-llama/llama-3.1-70b-instruct:free" # Using free tier for broad access
+    API_URL = "https://openrouter.ai/api/v1/chat/completions"
     
     def __init__(self, token: str):
         self.token = token
     
     def generate_scoop_leads(self, risk_analysis: dict, whale_analysis: dict = None, financials: dict = None) -> str:
-        """Generate 3 investigative scoop leads."""
+        """Generate 3 investigative scoop leads using OpenRouter."""
         
         # Build context
         context_parts = []
@@ -42,56 +42,52 @@ class InvestigativeEditor:
         
         data_context = "\n".join(context_parts) if context_parts else "No significant findings."
         
-        prompt = f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-You are an Investigative Editor at a financial news desk. Find newsworthy stories from SEC filings.
-Be specific and highlight red flags.<|eot_id|><|start_header_id|>user<|end_header_id|>
+        system_prompt = """You are an Investigative Editor at a financial news desk. Find newsworthy stories from SEC filings.
+Be specific and highlight red flags.
 
 Review the data below. Flag if whales are selling while management adds "Going Concern" risk language.
 
 Provide exactly 3 'Scoop Leads' with:
 1. A catchy headline
 2. 2-3 sentence explanation
-3. Significance for investors
+3. Significance for investors"""
 
-DATA:
-{data_context}<|eot_id|><|start_header_id|>assistant<|end_header_id|>"""
-        
+        # OpenRouter / OpenAI Format
         payload = {
-            "inputs": prompt,
-            "parameters": {
-                "max_new_tokens": 500,
-                "temperature": 0.3,
-                "return_full_text": False
-            }
+            "model": self.MODEL,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"DATA:\n{data_context}"}
+            ],
+            "temperature": 0.3,
+            "max_tokens": 1000
         }
         
         try:
             headers = {
                 "Authorization": f"Bearer {self.token}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://github.com/iamjohnwatson/Forensic-Filing-Assistant",
+                "X-Title": "Forensic Newsroom Auditor"
             }
             
-            print("[LLM] Calling Hugging Face API...")
-            resp = requests.post(self.API_URL, headers=headers, json=payload, timeout=120)
+            print(f"[LLM] Calling OpenRouter ({self.MODEL})...")
+            resp = requests.post(self.API_URL, headers=headers, json=payload, timeout=60)
             
             if resp.status_code == 200:
                 result = resp.json()
-                if isinstance(result, list) and result:
-                    return result[0].get("generated_text", str(result))
+                if "choices" in result and len(result["choices"]) > 0:
+                    return result["choices"][0]["message"]["content"]
                 return str(result)
             else:
-                return f"LLM Error {resp.status_code}: {resp.text[:300]}"
+                return f"OpenRouter Error {resp.status_code}: {resp.text[:300]}"
+                
         except Exception as e:
-            # CORS blocked - provide helpful message
-            return f"""⚠️ **LLM Access Blocked by CORS**
+            return f"""⚠️ **LLM Error**
+            
+{str(e)}
 
-The Hugging Face API cannot be accessed directly from the browser due to CORS restrictions.
-
-**Why this happens:**
-Browsers block direct API calls to different domains (like Hugging Face) for security.
-
-**Fix (Static Strategy):**
-Run the **"Fetch SEC Data"** workflow in GitHub Actions.
-This generates the insights server-side (where CORS doesn't exist) and saves them to `intelligence.json`.
-The app will then load that file instead of trying to call the API here.
+**Troubleshooting:**
+1. Check your OpenRouter API Key
+2. Ensure you have credits (if not using free model)
 """
