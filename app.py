@@ -97,11 +97,13 @@ def main():
         st.markdown("### ⚙️ Configuration")
         st.markdown("---")
         
-        hf_token = st.text_input(
-            "HuggingFace Token",
-            type="password",
-            help="Required for AI-powered analysis"
-        )
+        # Make token optional since we rely on backend-generated data
+        with st.expander("Advanced: Live AI Token", expanded=False):
+            hf_token = st.text_input(
+                "HuggingFace Token",
+                type="password",
+                help="Only needed if you want to attempt live analysis (note: may be blocked by CORS in browser)"
+            )
         
         ticker = st.text_input(
             "Ticker Symbol",
@@ -124,13 +126,9 @@ def main():
     
     # Main content
     if run_audit:
-        if not hf_token:
-            st.error("⚠️ Please enter your HuggingFace token")
-            st.stop()
-        
-        # Initialize clients
+        # Initialize clients (Token is optional)
         sec = sec_client.SECClient()
-        editor = llm_client.InvestigativeEditor(hf_token)
+        editor = llm_client.InvestigativeEditor(hf_token) if hf_token else None
         
         # Step 1: Resolve CIK
         st.write("🔍 **Step 1: Resolving company...**")
