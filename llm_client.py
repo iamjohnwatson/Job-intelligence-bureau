@@ -1,16 +1,15 @@
 """
-LLM Client - HuggingFace Integration via CORS Proxy
+LLM Client - HuggingFace Integration
 """
 import requests
 import json
 from urllib.parse import quote
 
 class InvestigativeEditor:
-    """LLM-powered investigative analysis via proxy."""
+    """LLM-powered investigative analysis."""
     
     MODEL = "meta-llama/Llama-3.1-70B-Instruct"
     API_URL = f"https://api-inference.huggingface.co/models/{MODEL}"
-    PROXY = "https://api.allorigins.win/raw?url="
     
     def __init__(self, token: str):
         self.token = token
@@ -67,7 +66,6 @@ DATA:
         }
         
         try:
-            # Try direct first (works if no CORS)
             headers = {
                 "Authorization": f"Bearer {self.token}",
                 "Content-Type": "application/json"
@@ -89,11 +87,11 @@ DATA:
 
 The Hugging Face API cannot be accessed directly from the browser due to CORS restrictions.
 
-**Workaround Options:**
-1. Deploy to GitHub Pages (may work better)
-2. Use a backend server to proxy LLM requests
-3. Use the Hugging Face Inference API from a server environment
+**Why this happens:**
+Browsers block direct API calls to different domains (like Hugging Face) for security.
 
-**Your Analysis Results (without LLM):**
-{data_context}
+**Fix (Static Strategy):**
+Run the **"Fetch SEC Data"** workflow in GitHub Actions.
+This generates the insights server-side (where CORS doesn't exist) and saves them to `intelligence.json`.
+The app will then load that file instead of trying to call the API here.
 """
