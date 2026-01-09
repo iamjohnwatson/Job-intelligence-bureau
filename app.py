@@ -122,7 +122,7 @@ def main():
         run_audit = st.button("🚀 Run Forensic Audit", use_container_width=True, type="primary")
         
         st.markdown("---")
-        st.caption("Powered by SEC EDGAR & Llama-3.1")
+        st.caption("Powered by SEC EDGAR & Gemini 2.0 Flash")
     
     # Main content
     if run_audit:

@@ -8,7 +8,7 @@ from urllib.parse import quote
 class InvestigativeEditor:
     """LLM-powered investigative analysis."""
     
-    MODEL = "meta-llama/llama-3.1-70b-instruct:free" # Using free tier for broad access
+    MODEL = "google/gemini-2.0-flash-exp:free" # Switching to Gemini 2.0 Flash (Free)
     API_URL = "https://openrouter.ai/api/v1/chat/completions"
     
     def __init__(self, token: str):
