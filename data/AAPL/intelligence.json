@@ -1,5 +1,5 @@
 {
-  "generated_at": 1767980017.9360065,
-  "scoop_leads": "LLM Error 410: {\"error\":\"https://api-inference.huggingface.co is no longer supported. Please use https://router.huggingface.co instead.\"}",
-  "model": "meta-llama/Llama-3.1-70B-Instruct"
+  "generated_at": 1768043996.545582,
+  "scoop_leads": "OpenRouter Error 401: {\"error\":{\"message\":\"No cookie auth credentials found\",\"code\":401}}",
+  "model": "google/gemini-2.0-flash-exp:free"
 }
